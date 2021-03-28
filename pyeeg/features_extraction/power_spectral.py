@@ -17,7 +17,7 @@ def power_spectral_density(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)
     Parameters
     ----------
     data : array
-        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points)
+        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points) 
     sf : int, optional
         sampling frequency, by default 128
     nperseg : int, optional

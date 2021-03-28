@@ -1,0 +1,7 @@
+README.md
+setup.py
+pyeeg/__init__.py
+pyeeg.egg-info/PKG-INFO
+pyeeg.egg-info/SOURCES.txt
+pyeeg.egg-info/dependency_links.txt
+pyeeg.egg-info/top_level.txt
