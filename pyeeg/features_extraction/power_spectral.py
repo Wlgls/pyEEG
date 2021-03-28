@@ -10,7 +10,7 @@
 import numpy as np
 from scipy import signal
 
-def power_spectra(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)):
+def power_spectral_density(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)):
     """The power of each frequency band is calculated according to the frequency band division，and then it combines the frequency band power into a feature vector. It mainly uses Welch method.
     
 
@@ -34,7 +34,13 @@ def power_spectra(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)):
     
     Example
     ------
-    >>> data, label
+    In [5]: d, l = load_deap(path, 0)
+
+    In [6]: d.shape, l.shape
+    Out[6]: ((40, 32, 8064), (40, 1))
+
+    In [7]: psd(d).shape
+    Out[7]: (40, 32, 5) # Each channel has 5 bands of average power
     """
     band = np.array(band)
 
@@ -50,7 +56,7 @@ def power_spectra(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)):
     # Get features
     f = []
     for index in pindex:
-        f.append(np.mean(power[..., index]), axis=-1)
+        f.append(np.mean(power[..., index], axis=-1))
     
     f = np.stack(f, axis=-1)
     return f
