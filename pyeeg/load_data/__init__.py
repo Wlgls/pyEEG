@@ -1,2 +1,2 @@
 
-from .load_data import load_deap
+from ._load_data import load_deap

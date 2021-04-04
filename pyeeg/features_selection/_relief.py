@@ -25,6 +25,8 @@ class Relief(object):
     feature_sort: 1d-array
         Index of features descending sorted by score, 
 
+    Examples
+    ---------
     """
     def __init__(self, m_samples=None, n_features_to_keep=None):
         
@@ -88,7 +90,7 @@ class Relief(object):
 
         return self
 
-    def tansform(self, X):
+    def transform(self, X):
         """select features
 
         Parameters
@@ -101,7 +103,7 @@ class Relief(object):
         X_reduced: array-like
             Selected features
         """
-
+        print(self.n_features_to_keep)
         return X[:, self.feature_sort[:self.n_features_to_keep]]
 
             

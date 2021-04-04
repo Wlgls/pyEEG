@@ -7,10 +7,11 @@ setuptools.setup(
         author_email="smithguazi@gmail.com",
         description="Python for EEG",
         url="https://github.com/wlgls/pyEEG",
-        packages=["pyeeg"],
+        packages=setuptools.find_packages(),
         classifiers=[
             "Programming Language :: Python :: 3",
             "License :: OSI Approved :: MIT License",
             "Operating System :: OS Independent",
         ],
+        
 )
