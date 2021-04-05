@@ -8,8 +8,8 @@
 
 
 
-from .power_spectral import power_spectral_density
-from .statistics import statistics_feature
-from .hjorth import hjorth_features
-from .sevcik_fractal_dimension import sevcik_fd
-from .higher_order_crossing import hoc
+from ._psd import power_spectral_density
+from ._statistics import statistics
+from ._hjorth import hjorth
+from ._sevcik_fd import sevcik_fd
+from ._hoc import higher_order_crossing

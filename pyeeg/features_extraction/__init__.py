@@ -13,3 +13,4 @@ from ._statistics import statistics
 from ._hjorth import hjorth
 from ._sevcik_fd import sevcik_fd
 from ._hoc import higher_order_crossing
+from ._ree import recoursing_energy_efficiency
