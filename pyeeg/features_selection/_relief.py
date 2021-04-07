@@ -103,7 +103,7 @@ class Relief(object):
         X_reduced: array-like
             Selected features
         """
-        print(self.n_features_to_keep)
+        # print(self.n_features_to_keep)
         return X[:, self.feature_sort[:self.n_features_to_keep]]
 
             

@@ -10,7 +10,7 @@
 import numpy as np
 from scipy import signal
 
-def power_spectral_density(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)):
+def power_spectral_density(data, sf=128, nperseg=128, band=(4, 8, 14, 31, 65)):
     """The power of each frequency band is calculated according to the frequency band division，and then it combines the frequency band power into a feature vector. It mainly uses Welch method.
     
 
@@ -23,8 +23,8 @@ def power_spectral_density(data, sf=128, nperseg=128, band=(0, 4, 8, 14, 31, 65)
     nperseg : int, optional
         for Welch method, According to scipy.signal.welch , by default 1
     band : tuple, optional
-        boundary frequencies of bands, by default (0, 4, 8, 14, 31, 65)
-        e.g. for (0, 4, 8, 14, 31, 65), It will calculate the power spectrum of delta(0~3Hz),theta(4~7Hz),alpha(8~13Hz),beta(14~30Hz) and gamma(31~64Hz).
+        boundary frequencies of bands, by default (4, 8, 14, 31, 65)
+        e.g. for (0, 4, 8, 14, 31, 65), It will calculate the power spectrum of theta(4~7Hz),alpha(8~13Hz),beta(14~30Hz) and gamma(31~64Hz).
 
     Returns
     -------
