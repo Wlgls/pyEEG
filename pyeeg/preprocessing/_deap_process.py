@@ -38,13 +38,15 @@ def split_signal(data, label, windows=1, fs=128):
     return tmpData, tmpLabel
 
 
-def remove_baseline(data, baseline=3):
+def remove_baseline(data, label, baseline=3):
     """For the deap dataset, the first three seconds are the baseline, we need to get rid of it.
 
     Parameters
     ----------
     data : array
         data, for sliced DEAP dataset, It's shape may be (n_trials, n_slices,  n_channels, points) 
+    label : array
+        In order to correspond with data
     baseline : int, optional
         Baseline time, by default 3
 
@@ -58,4 +60,7 @@ def remove_baseline(data, baseline=3):
     base = data[:, :baseline, ...]
     signal = data[:, baseline:, ...]
 
-    return base, signal
+    base_label = label[:, :baseline]
+    signal_label = label[:, baseline:]
+
+    return base, base_label, signal, signal_label
