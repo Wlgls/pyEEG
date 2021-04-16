@@ -69,7 +69,7 @@ def group_by_time(data, label, shuffle=False):
     label = label.reshape(-1)
 
     groups = np.arange(1, slices+1)
-    groups = np.title(groups, trials)
+    groups = np.tile(groups, trials)
 
     if shuffle:
         index = np.arange(len(groups))

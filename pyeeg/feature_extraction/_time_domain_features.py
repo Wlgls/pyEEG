@@ -1,0 +1,177 @@
+# -*- encoding: utf-8 -*-
+'''
+@File        :_time_domain_features.py
+@Time        :2021/04/16 20:02:55
+@Author      :wlgls
+@Version     :1.0
+'''
+
+import numpy as np
+
+def statistics(data):
+    """Statistical features， include Power, Mean, Std, 1st differece, Normalized 1st difference, 2nd difference,  Normalized 2nd difference.
+
+    Parameters
+    ----------
+    data array
+        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points)
+    
+    Return
+    ----------
+    f:
+        Solved feature, It's shape is similar to the shape of your input data.
+        e.g. for input.shape is (n_trials, n_channels, points), the f.shape is (n_trials, n_channels, n_features)
+
+    Example
+    ----------
+    In [13]: d.shape, l.shape
+    Out[13]: ((40, 32, 8064), (40, 1))
+
+    In [14]: statistics_feature(d).shape
+    Out[14]: (40, 32, 7)
+    """
+    # Power
+    power = np.mean(data**2, axis=-1)
+    # Mean
+    ave = np.mean(data, axis=-1)
+    # Standard Deviation
+    std = np.std(data, axis=-1)
+    # the mean of the absolute values of 1st differece mean
+    diff_1st = np.mean(np.abs(np.diff(data,n=1, axis=-1)), axis=-1)
+    # the mean of the absolute values of Normalized 1st difference
+    normal_diff_1st = diff_1st / std
+    # the mean of the absolute values of 2nd difference mean 
+    diff_2nd = np.mean(np.abs(data[..., 2:] - data[..., :-2]), axis=-1)
+    # the mean of the absolute values of Normalized 2nd difference
+    normal_diff_2nd = diff_2nd / std
+    # Features.append(np.concatenate((Power, Mean, Std, diff_1st, normal_diff_1st, diff_2nd, normal_diff_2nd), axis=2))
+    
+    f = np.stack((power, ave, std, diff_1st, normal_diff_1st, diff_2nd, normal_diff_2nd), axis=-1)
+    return f
+
+
+def hjorth(data):
+    """Solving Hjorth features， include activity, mobility, complexity
+
+    Parameters
+    ----------
+    data array
+        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points)
+    
+    Return
+    ----------
+    f:
+        Solved feature, It's shape is similar to the shape of your input data.
+        e.g. for input.shape is (n_trials, n_channels, points), the f.shape is (n_trials, n_channels, n_features)
+
+    Example
+    ----------
+    In [15]: d.shape, l.shape
+    Out[15]: ((40, 32, 8064), (40, 1))
+
+    In [16]: hjorth_features(d).shape
+    Out[16]: (40, 32, 3)
+    """
+    data = np.array(data)
+    ave = np.mean(data, axis=-1)[..., np.newaxis]
+    diff_1st = np.diff(data, n=1, axis=-1)
+    # print(diff_1st.shape)
+    diff_2nd = data[..., 2:] - data[..., :-2]
+    # Activity
+    activity = np.mean((data-ave)**2, axis=-1)
+    # print(Activity.shape)
+    # Mobility
+    varfdiff = np.var(diff_1st, axis=-1)
+    # print(varfdiff.shape)
+    mobility = np.sqrt(varfdiff / activity)
+
+    # Complexity
+    varsdiff = np.var(diff_2nd, axis=-1)
+    complexity = np.sqrt(varsdiff/varfdiff) / mobility
+
+    f = np.stack((activity, mobility, complexity), axis=-1)
+    return f
+
+
+def higher_order_crossing(data, k=10, combined=True):
+    """Solving the feature of hoc. Hoc is a high order zero crossing quantity.
+
+    Parameters
+    ----------
+    data : array
+        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points) 
+    k : int, optional
+        Order, by default 10
+    
+    Return
+    ----------
+    nzc:
+        Solved feature, It's shape is similar to the shape of your input data.
+        e.g. for input.shape is (n_trials, n_channels, points), the f.shape is (n_trials, n_channels, n_features)
+
+    Example
+    ----------
+    In [4]: d, l = load_deap(path, 0)
+
+    In [5]: hoc(d, k=10).shape
+    Out[5]: (40, 32, 10)
+
+    In [6]: hoc(d, k=5).shape
+    Out[6]: (40, 32, 5)
+    """
+    nzc = []
+    for i in range(k):
+        curr_diff = np.diff(data, n=i)
+        x_t = curr_diff >= 0
+        x_t = np.diff(x_t)
+        x_t = np.abs(x_t)
+
+        count = np.count_nonzero(x_t, axis=-1)
+        nzc.append(count)
+    nzc = np.stack(nzc, axis=-1)
+    return nzc
+
+
+def sevcik_fd(data):
+    """Fractal dimension feature is solved, which is used to describe the shape information of EEG time series data. It seems that this feature can be used to judge the electrooculogram and EEG.The calculation methods include Sevcik, fractal Brownian motion, box counting, Higuchi and so on.
+
+    Sevcik method: fast calculation and robust analysis of noise
+    Higuchi: closer to the theoretical value than box counting
+
+    The Sevick method is used here because it is easier to implement
+    Parameters
+    ----------
+    Parameters
+    ----------
+    data array
+        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points)
+    
+    Return
+    ----------
+    f:
+        Solved feature, It's shape is similar to the shape of your input data.
+        e.g. for input.shape is (n_trials, n_channels, points), the f.shape is (n_trials, n_channels, n_features)
+    
+    Example
+    ----------
+    In [7]: d.shape, l.shape
+    Out[7]: ((40, 32, 8064), (40, 1))
+
+    In [8]: sevcik_fd(d).shape
+    Out[8]: (40, 32, 1)
+
+    """
+
+    points = data.shape[-1]
+
+    x = np.arange(1, points+1)
+    x_ = x / np.max(x)
+
+    miny = np.expand_dims(np.min(data, axis=-1), axis=-1)
+    maxy = np.expand_dims(np.max(data, axis=-1), axis=-1)
+    y_ = (data-miny) / (maxy-miny)
+
+    L = np.expand_dims(np.sum(np.sqrt(np.diff(y_, axis=-1)**2 + np.diff(x_)**2), axis=-1), axis=-1)
+    FD = 1 + np.log(L) / np.log(2 * (points-1))
+    # print(FD.shape)
+    return FD

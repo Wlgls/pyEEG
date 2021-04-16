@@ -1,4 +1,5 @@
 
 __all__ = [
-    'features_extraction', 'features_selection', 'load_data'
+    'feature_extraction', 'feature_selection', 'load_data', 
+    'feature_process', 'preprocessing', 'utils'
 ]

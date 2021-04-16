@@ -13,24 +13,23 @@ from scipy import signal
 def power_spectral_density(data, sf=128, nperseg=128, band=(4, 8, 14, 31, 65)):
     """The power of each frequency band is calculated according to the frequency band division，and then it combines the frequency band power into a feature vector. It mainly uses Welch method.
     
-
     Parameters
     ----------
     data : array
-        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points) 
+        data, for DEAP dataset, It's shape may be (n_trials,n_slices, n_channels, points) （40, 63, 32, 128）
     sf : int, optional
         sampling frequency, by default 128
     nperseg : int, optional
         for Welch method, According to scipy.signal.welch , by default 1
     band : tuple, optional
         boundary frequencies of bands, by default (4, 8, 14, 31, 65)
-        e.g. for (0, 4, 8, 14, 31, 65), It will calculate the power spectrum of theta(4~7Hz),alpha(8~13Hz),beta(14~30Hz) and gamma(31~64Hz).
+        e.g. for (4, 8, 14, 31, 65), It will calculate the power spectrum of theta(4~7Hz),alpha(8~13Hz),beta(14~30Hz) and gamma(31~64Hz).
 
     Returns
     -------
     f:
         Solved feature, It's shape is similar to the shape of your input data.
-        e.g. for input.shape is (n_trials, n_channels, points), the f.shape is (n_trials, n_channels, n_features)
+        e.g. for input.shape is (n_trials,n_slices n_channels, points), the f.shape is (n_trials,n_slices, n_channels, n_features)
     
     Example
     ------
@@ -41,6 +40,15 @@ def power_spectral_density(data, sf=128, nperseg=128, band=(4, 8, 14, 31, 65)):
 
     In [7]: psd(d).shape
     Out[7]: (40, 32, 5) # Each channel has 5 bands of average power
+    
+    In [12]: d, l = split_signal(d, l)
+
+    In [13]: d.shape, l.shape
+    Out[13]: ((40, 63, 32, 128), (40, 63))
+
+    In [14]: psd(d).shape
+    Out[14]: (40, 63, 32, 4)
+
     """
     band = np.array(band)
 
