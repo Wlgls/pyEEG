@@ -34,6 +34,7 @@ class Relief(object):
         self.n_features_to_keep =n_features_to_keep
         self.feature_scores = None
         self.feature_sort = None
+        
 
     def fit(self, X, y):
         """Learn the features to select.

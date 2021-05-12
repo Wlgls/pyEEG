@@ -202,33 +202,6 @@ def calc_L_average(X, k):
     return L_average
 
 def higuchi_fd(data, k_max):
-    """Fractal dimension feature is solved, which is used to describe the shape information of EEG time series data. It seems that this feature can be used to judge the electrooculogram and EEG.The calculation methods include Sevcik, fractal Brownian motion, box counting, Higuchi and so on.
-
-    Sevcik method: fast calculation and robust analysis of noise
-    Higuchi: closer to the theoretical value than box counting
-
-    The higuchi method is used here because it is easier to implement
-    Parameters
-    ----------
-    Parameters
-    ----------
-    data array
-        data, for DEAP dataset, It's shape may be (n_trials, n_channels, points)
-    
-    Return
-    ----------
-    f:
-        Solved feature, It's shape is similar to the shape of your input data.
-        e.g. for input.shape is (n_trials, n_channels, points), the f.shape is (n_trials, n_channels, n_features)
-    
-    Example
-    ----------
-    In [7]: d.shape, l.shape
-    Out[7]: ((40, 32, 8064), (40, 1))
-
-    In [8]: higuchi_fd(d).shape
-    Out[8]: (40, 32, 1)
-    """
     calc_L_average_series = np.frompyfunc(lambda k: calc_L_average(data, k), 1, 1)
 
     k = np.arange(1, k_max+1)

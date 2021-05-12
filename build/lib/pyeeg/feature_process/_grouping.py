@@ -31,7 +31,7 @@ def group_by_trial(data, label, shuffle=False):
     """
     trials, slices, *features_shape = data.shape
     data = data.reshape(-1, *features_shape)
-    label = label.reshape(-1)
+    label = label.reshape(-1, label.shape[-1])
 
     groups = np.arange(1, trials+1)
     groups = np.repeat(groups, slices)
