@@ -11,6 +11,7 @@ from sklearn.neighbors import KDTree
 
 
 class ReliefF(object):
+    # ReliefF
     def __init__(self, m_samples=100, n_neighbors=20, n_features_to_keep=20):
         self.m_samples = m_samples
         self.feature_score = None
