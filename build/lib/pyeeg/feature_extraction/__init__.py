@@ -13,5 +13,6 @@ from ._time_domain_features import sevcik_fd
 from ._time_domain_features import higuchi_fd
 
 from ._frequency_domain_features import power_spectral_density
+from ._frequency_domain_features import bin_power
 
 from ._wavelet_features import wavelet_features

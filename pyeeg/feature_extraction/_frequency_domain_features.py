@@ -9,6 +9,20 @@
 import numpy as np
 from scipy import signal
 
+def bin_power(data, band=(4, 8, 12, 16, 25, 45), fs=128):
+    # 重构 批量化处理
+    C = np.fft.fft(data)
+    C = np.abs(C)
+    power = []
+    for b_index in range(len(band)-1):
+        freq_s = float(band[b_index])
+        freq_e = float(band[b_index+1])
+        # 切分开始和结束
+        start = int(np.floor(freq_s/fs*data.shape[-1]))
+        end = int(np.floor(freq_e/fs*data.shape[-1]))
+        power.append(np.sum(C[..., start:end], axis=-1))
+    return np.stack(power, axis=-1)
+
 def power_spectral_density(data, sf=128, nperseg=128, band=(4, 8, 14, 31, 65)):
     """The power of each frequency band is calculated according to the frequency band division，and then it combines the frequency band power into a feature vector. It mainly uses Welch method.
     
