@@ -23,7 +23,7 @@ def group_by_trial(data, label, shuffle=False):
     Returns
     -------
     groups: array
-        Your group
+        group
     data: array
         Data after grouping. If your input's shape is (n_trials*n_slices,  n_features) 
     label: array

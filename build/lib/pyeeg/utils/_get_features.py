@@ -32,6 +32,16 @@ def get_features(data, label, feature_func):
 
     return G, X, Y
 
+def get_features_no_baseline(data, label, feature_func):
+    data, label = split_signal(data, label)
+    label = label_binarizer(label)
+
+    base, _, signal, signal_label = remove_baseline(data, label)
+
+    signalf = combined_electrode(feature_func(signal))
+    G, X, Y = group_by_trial(signalf, signal_label)
+    return G, X, Y
+
 
 
 
